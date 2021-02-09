@@ -1,30 +1,22 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {UsersComponent} from './components/users/users.component';
-import {UserComponent} from './components/user/user.component';
-import {UserEditComponent} from './components/user-edit/user-edit.component';
-import {RouterModule, Routes} from '@angular/router';
+import { PostsComponent } from './components/posts/posts.component';
+import { PostComponent } from './components/post/post.component';
+import { FullPostComponent } from './components/full-post/full-post.component';
+import {HttpClientModule} from '@angular/common/http';
 
-const route: Routes = [
-  {path: 'users', component: UsersComponent, children: [
-      {path: ':id', component: UserEditComponent}
-    ]}
-];
 
 @NgModule({
   declarations: [
     AppComponent,
-    UsersComponent,
-    UserComponent,
-    UserEditComponent
+    PostsComponent,
+    PostComponent,
+    FullPostComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
-    RouterModule.forRoot(route)
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

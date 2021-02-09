@@ -1,0 +1,8 @@
+<h2>User's posts</h2>
+<div *ngIf="singlePost">
+  <app-full-post></app-full-post>
+</div>
+
+<div *ngFor="let post of posts" >
+  <app-post [post]="post"></app-post>
+</div>
