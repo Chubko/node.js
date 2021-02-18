@@ -7,6 +7,7 @@ const path = require('path');
 function handleError(err) {
     if (err) {
         console.log(`Error: ${err}`);
+        return;
     }
 }
 fs.mkdir(`${__dirname}/1/2/3/4`, {recursive: true}, err => handleError(err));
