@@ -12,6 +12,7 @@ const pathMale = path.join(__dirname, '2000');
 function handleError(err) {
     if (err) {
         console.log(`Error: ${err}`);
+        return;
     }
 }
 
