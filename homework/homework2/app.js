@@ -42,7 +42,7 @@ let users = [];
 const getUsersFromFile = async () => {
     try {
         const usersFromFile = await readFile(pathToUsers);
-        users = await JSON.parse(usersFromFile.toString());
+        users = JSON.parse(usersFromFile.toString());
     } catch (err) {
         console.log(err.message);
     }
@@ -58,49 +58,50 @@ app.post('/register', ((req, res) => {
         res.redirect('/error');
         return;
     }
-    
+
     users.push(req.body);
     fs.writeFile(pathToUsers, JSON.stringify(users), err => {
         if (err) {
             console.log(err);
         }
-    })
-    res.redirect('/users',);
-}))
+    });
+    res.redirect('/users');
+}));
 
 app.get('/login', (req, res) => {
     res.render('login');
 });
 
 app.post('/login', ((req, res) => {
-    if(req.body.email === '' || req.body.password === ''){
+    const {email, password} = req.body;
+    if (!email || !password) {
         res.redirect('/login');
         return;
     }
-    
-    if (users.some(value => value.email === req.body.email && value.password === req.body.password)) {
-        const userId = users.findIndex(value => value.email === req.body.email);
+
+    if (users.some(value => value.email === email && value.password === password)) {
+        const userId = users.findIndex(value => value.email === email);
         res.redirect(`/users/${userId}`);
         return;
     }
-    
+
     res.redirect('/register');
 }));
 
 app.get('/error', (req, res) => {
     res.render('error');
-})
+});
 
 app.get('/users', (req, res) => {
     res.render('users', {users});
-})
+});
 
 app.get('/users/:userId', ((req, res) => {
     const {userId} = req.params;
     const user = users[userId];
     res.render('user', {user});
-}))
+}));
 
 app.listen(port, () => {
     console.log(`Server is working on port ${port}`)
-})
+});
