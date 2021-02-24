@@ -4,44 +4,49 @@ const message = require('../message/success.message');
 
 module.exports = {
     createUser: async (req, res) => {
-        try{
+        try {
             await userService.createUser(req.body);
 
             res.status(statusCode.CREATED).json(message.CREATED);
-        }catch (e){
+        } catch (e) {
             res.status(statusCode.BAD_REQUEST).json(e.message);
         }
     },
 
-    getAllUsers: async (req, res) => {
-        try{
-            const users = await userService.findAllUsers();
+    getAllUsers: async (req, res, next) => {
+        try {
+            if (req.query) {
+                next();
+            }
 
+            const users = await userService.findAllUsers();
+            
             res.json(users);
-        } catch (e){
+        } catch (e) {
             res.status(statusCode.BAD_REQUEST).json(e.message);
         }
     },
 
     getUserByName: async (req, res) => {
-        try{
-            const {userName} = req.params;
-            const user = await userService.findUserByName(userName);
+        try {
+            if (!req.query) {
+                return;
+            }
+
+            const user = await userService.findUserByNameOrEmail(req.query);
 
             res.json(user);
-        }catch (e){
+        } catch (e) {
             res.status(statusCode.BAD_REQUEST).json(e.message);
         }
     },
 
     deleteUser: async (req, res) => {
-        try{
-            const {userName} = req.params;
-
-            await userService.deleteUser(userName);
+        try {
+            await userService.deleteUser(req.query);
 
             res.status(statusCode.CREATED).json(message.DELETED);
-        } catch (e){
+        } catch (e) {
             res.status(statusCode.BAD_REQUEST).json(e.message);
         }
     }
