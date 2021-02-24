@@ -6,6 +6,7 @@ module.exports = {
     createUser: async (req, res) => {
         try{
             await userService.createUser(req.body);
+
             res.status(statusCode.CREATED).json(message.CREATED);
         }catch (e){
             res.status(statusCode.BAD_REQUEST).json(e.message);
@@ -38,6 +39,7 @@ module.exports = {
             const {userName} = req.params;
 
             await userService.deleteUser(userName);
+
             res.status(statusCode.CREATED).json(message.DELETED);
         } catch (e){
             res.status(statusCode.BAD_REQUEST).json(e.message);
