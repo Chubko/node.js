@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { promisify } = require('util');
+const {promisify} = require('util');
 
 const pathToUsers = path.join(process.cwd(), 'database', 'users.json');
 const readFile = promisify(fs.readFile);
@@ -33,23 +33,23 @@ module.exports = {
         }
     },
 
-    findUserByName: async (userName) => {
+    findUserByNameOrEmail: async (userData) => {
         try {
             const usersFromFile = await readFile(pathToUsers);
             const DB = JSON.parse(usersFromFile.toString());
 
-            return DB.filter(user => user.name === userName);
+            return DB.filter(user => user.email === userData.email || user.name === userData.name);
         } catch (e) {
             console.log(e.message);
         }
     },
 
-    deleteUser: async (userName) => {
+    deleteUser: async (userToDelete) => {
         try {
             const usersFromFile = await readFile(pathToUsers);
             const DB = JSON.parse(usersFromFile.toString());
 
-            DB.splice(DB.indexOf(userName), 1);
+            DB.splice(DB.indexOf(userToDelete), 1);
             await writeFile(pathToUsers, JSON.stringify(DB));
         } catch (e) {
             console.log(e.message);
