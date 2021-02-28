@@ -106,7 +106,10 @@ module.exports = {
             'error',
             { varsIgnorePattern: 'ctx' },
         ],
-        'no-use-before-define': 'error',
+        'no-use-before-define': [
+            'error',
+            { functions: false }
+        ],
         'no-useless-call': 'error',
         'no-useless-concat': 'error',
         'no-useless-return': 'error',
@@ -144,7 +147,7 @@ module.exports = {
         'use-isnan': 'error',
         'wrap-iife': 'error',
         yoda: 'error',
-        'linebreak-style': 0,
+        'linebreak-style': 'off',
         'arrow-parens': 0,
     },
     overrides: [{
