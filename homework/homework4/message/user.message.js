@@ -26,5 +26,9 @@ module.exports = {
     INCORRECT_NAME: {
         en: 'Name is incorrect',
         ua: 'Імя вказано некоректно'
+    },
+    NOT_EXISTING_ID: {
+        en: 'Id is not existing',
+        ua: 'Id неіснуючий'
     }
 };

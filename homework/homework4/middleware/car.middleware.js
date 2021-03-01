@@ -1,5 +1,6 @@
 const message = require('../message/car.message');
 const statusCode = require('../constant/status.codes.enum');
+const { findCarById } = require('../service/car.service');
 
 module.exports = {
     isCarValid: (req, res, next) => {
@@ -37,4 +38,20 @@ module.exports = {
             res.status(statusCode.BAD_REQUEST).json(e.message);
         }
     },
+
+    isIdExisting: async (req, res, next) => {
+        try {
+            const { carId, preferLang = 'en' } = req.params;
+
+            const car = await findCarById(carId);
+
+            if (!car) {
+                throw Error(message.NOT_EXISTING_ID[preferLang]);
+            }
+
+            next();
+        } catch (e) {
+            res.status(statusCode.BAD_REQUEST).json(e.message);
+        }
+    }
 };

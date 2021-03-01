@@ -1,5 +1,6 @@
 const message = require('../message/user.message');
 const statusCode = require('../constant/status.codes.enum');
+const { findUserById } = require('../service/user.service');
 
 module.exports = {
     isUserValid: (req, res, next) => {
@@ -37,4 +38,20 @@ module.exports = {
             res.status(statusCode.BAD_REQUEST).json(e.message);
         }
     },
+
+    isIdExisting: async (req, res, next) => {
+        try {
+            const { userId, preferLang = 'en' } = req.params;
+
+            const user = await findUserById(userId);
+
+            if (!user) {
+                throw Error(message.NOT_EXISTING_ID[preferLang]);
+            }
+
+            next();
+        } catch (e) {
+            res.status(statusCode.BAD_REQUEST).json(e.message);
+        }
+    }
 };

@@ -26,5 +26,9 @@ module.exports = {
     INCORRECT_PRICE: {
         en: 'Price is incorrect',
         ua: 'Ціну вказано некоректно'
+    },
+    NOT_EXISTING_ID: {
+        en: 'Id is not existing',
+        ua: 'Id неіснуючий'
     }
 };
