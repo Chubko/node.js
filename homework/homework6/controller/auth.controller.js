@@ -16,7 +16,7 @@ module.exports = {
 
             res.json(userMessage.AUTH_SUCCESSFUL[prefLang]);
         } catch (e) {
-            res.status(statusCodes.BAD_REQUEST).json(e.message);
+            res.status(statusCodes.NOT_FOUND).json(e.message);
         }
     },
 
