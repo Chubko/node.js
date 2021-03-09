@@ -12,13 +12,18 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "dotenv": "^8.2.0",
+    "email-templates": "^8.0.3",
     "express": "^4.17.1",
     "express-handlebars": "^5.2.1",
     "joi": "^17.4.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.11.18"
+    "mongoose": "^5.11.18",
+    "nodemailer": "^6.5.0",
+    "pug": "^3.0.2"
   },
   "devDependencies": {
+    "@types/email-templates": "^8.0.2",
+    "@types/nodemailer": "^6.4.0",
     "eslint": "^7.20.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
