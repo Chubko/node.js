@@ -1,16 +1,18 @@
-const { statusCodes } = require('../constant');
+const { emailActions, statusCodes } = require('../constant');
 const { passwordHasher } = require('../helper');
 const { userMessage } = require('../message');
-const { userService } = require('../service');
+const { emailService, userService } = require('../service');
 
 module.exports = {
     createUser: async (req, res, next) => {
         try {
-            const { password, prefLang = 'en' } = req.body;
+            const { email, password, prefLang = 'en' } = req.body;
 
             const hashPassword = await passwordHasher.hash(password);
 
             await userService.createUser({ ...req.body, password: hashPassword });
+
+            await emailService.sendEmail(email, emailActions.USER_CREATED, { userEmail: email });
 
             res.status(statusCodes.CREATED).json(userMessage.CREATED[prefLang]);
         } catch (e) {
@@ -43,8 +45,11 @@ module.exports = {
     updateUserById: async (req, res, next) => {
         try {
             const { userId } = req.params;
+            const { email } = req.body;
 
             await userService.updateUserById(userId, req.body);
+
+            await emailService.sendEmail(email, emailActions.USER_CHANGED, { userEmail: email });
 
             res.json(userMessage.UPDATED);
         } catch (e) {
@@ -54,9 +59,11 @@ module.exports = {
 
     deleteUserById: async (req, res, next) => {
         try {
-            const { userId } = req.params;
+            const { email, userId } = req.params;
 
             await userService.deleteUserById(userId);
+
+            await emailService.sendEmail(email, emailActions.USER_DELETED, { userEmail: email });
 
             res.status(statusCodes.DELETED).json(userMessage.DELETED);
         } catch (e) {

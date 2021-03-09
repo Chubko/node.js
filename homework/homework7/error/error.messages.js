@@ -20,6 +20,10 @@ module.exports = {
         customCode: 4004,
         message: 'Token is required'
     },
+    WRONG_ACTION: {
+        customCode: 4005,
+        message: 'Wrong email action'
+    },
     // UNAUTHORIZED
     NOT_VERIFIED_TOKEN: {
         customCode: 4011,
