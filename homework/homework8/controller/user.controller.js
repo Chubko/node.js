@@ -1,4 +1,4 @@
-const { emailActions, statusCodes } = require('../constant');
+const { dirNames: { PHOTOS, STATIC, USER }, emailActions, statusCodes } = require('../constant');
 const { attachmentDirBuilder, passwordHasher } = require('../helper');
 const { userMessage } = require('../message');
 const { emailService, userService } = require('../service');
@@ -13,7 +13,7 @@ module.exports = {
             const user = await userService.createUser({ ...req.body, password: hashPassword });
 
             if (avatar) {
-                const { uploadPath } = attachmentDirBuilder(avatar, avatar.name, 'photos', user._id);
+                const { uploadPath } = await attachmentDirBuilder(avatar, avatar.name, PHOTOS, user._id, STATIC, USER);
 
                 await userService.updateUserById(user._id, { avatar: uploadPath });
             }
@@ -58,7 +58,7 @@ module.exports = {
             const user = await userService.updateUserById(userId, { ...req.body, password: hashPassword });
 
             if (avatar) {
-                const { uploadPath } = attachmentDirBuilder(avatar, avatar.name, 'photos', user._id);
+                const { uploadPath } = attachmentDirBuilder(avatar, avatar.name, PHOTOS, user._id, STATIC, USER);
 
                 await userService.updateUserById(user._id, { avatar: uploadPath });
             }

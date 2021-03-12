@@ -1,4 +1,9 @@
-const { statusCodes } = require('../constant');
+const {
+    dirNames: {
+        CAR, DOCS, PHOTOS, STATIC
+    },
+    statusCodes
+} = require('../constant');
 const { attachmentDirBuilder } = require('../helper');
 const { carMessage } = require('../message');
 const { carService } = require('../service');
@@ -10,7 +15,7 @@ module.exports = {
             const car = await carService.createCar(req.body);
 
             if (docs) {
-                const promises = docs.map(doc => attachmentDirBuilder(doc, doc.name, 'docs', car._id));
+                const promises = docs.map(doc => attachmentDirBuilder(doc, doc.name, DOCS, car._id, STATIC, CAR));
 
                 await Promise.allSettled(promises)
                     // eslint-disable-next-line no-return-await
@@ -19,7 +24,7 @@ module.exports = {
             }
 
             if (photos) {
-                const promises = photos.map(photo => attachmentDirBuilder(photo, photo.name, 'photos', car._id));
+                const promises = photos.map(photo => attachmentDirBuilder(photo, photo.name, PHOTOS, car._id, STATIC, CAR));
 
                 await Promise.allSettled(promises)
                     // eslint-disable-next-line no-return-await

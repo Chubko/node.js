@@ -2,9 +2,9 @@ const fs = require('fs-extra').promises;
 const path = require('path');
 const uuid = require('uuid').v1;
 
-module.exports = async (file, docName, docType, userId) => {
-    const pathWithoutStatic = path.join('car', `${userId}`, docType);
-    const attachmentDir = path.join(process.cwd(), 'static', pathWithoutStatic);
+module.exports = async (file, docName, docType, userId, mainFolderName, subFolderName) => {
+    const pathWithoutStatic = path.join(subFolderName, `${userId}`, docType);
+    const attachmentDir = path.join(process.cwd(), mainFolderName, pathWithoutStatic);
     const fileExtension = docName.split('.').pop();
     const attachmentName = `${uuid()}.${fileExtension}`;
     const finalAttachmentPath = path.join(attachmentDir, attachmentName);
