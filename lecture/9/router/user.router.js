@@ -5,13 +5,7 @@ const { authMiddleware, fileMiddlewares, userMiddlewares } = require('../middlew
 
 router.get('/', userController.getAllUsers);
 
-router.post(
-    '/',
-    fileMiddlewares.checkFile,
-    fileMiddlewares.checkAvatar,
-    userMiddlewares.isUserValid,
-    userController.createUser
-);
+router.post('/', fileMiddlewares.checkFile, fileMiddlewares.checkAvatar, userMiddlewares.isUserValid, userController.createUser);
 
 router.use('/:userId', userMiddlewares.checkIsIdValid); // для маршруту '/:userId' використовувати мідлвару, в інших роутах не дублювати
 
