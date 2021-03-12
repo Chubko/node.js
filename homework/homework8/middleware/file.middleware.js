@@ -1,9 +1,12 @@
+const { statusCodes } = require('../constant');
 const {
     DOCS_MIMETYPES,
     FILE_MAX_SIZE,
     PHOTO_MAX_SIZE,
     PHOTOS_MIMETYPES
 } = require('../constant/constants');
+const { errorMessages } = require('../error');
+const ErrorHandler = require('../error/error.handler');
 
 module.exports = {
     checkFile: (req, res, next) => {
@@ -16,22 +19,34 @@ module.exports = {
             const allFiles = Object.values(files);
 
             for (let i = 0; i < allFiles.length; i++) {
-                const { mimetype, name, size } = allFiles[i];
+                const { mimetype, size } = allFiles[i];
 
                 if (PHOTOS_MIMETYPES.includes(mimetype)) {
                     if (PHOTO_MAX_SIZE < size) {
-                        throw new Error(`file ${name} is too big`); // TODO
+                        throw new ErrorHandler(
+                            statusCodes.BAD_REQUEST,
+                            errorMessages.TOO_BIG_FILE.customCode,
+                            errorMessages.TOO_BIG_FILE.message
+                        );
                     }
 
                     photos.push(allFiles[i]);
                 } else if (DOCS_MIMETYPES.includes(mimetype)) {
                     if (FILE_MAX_SIZE < size) {
-                        throw new Error(`file ${name} is too big`); // TODO
+                        throw new ErrorHandler(
+                            statusCodes.BAD_REQUEST,
+                            errorMessages.TOO_BIG_FILE.customCode,
+                            errorMessages.TOO_BIG_FILE.message
+                        );
                     }
 
                     docs.push(allFiles[i]);
                 } else {
-                    throw new Error(`file ${name} is too big`); // TODO
+                    throw new ErrorHandler(
+                        statusCodes.BAD_REQUEST,
+                        errorMessages.WRONG_FILE.customCode,
+                        errorMessages.WRONG_FILE.message
+                    );
                 }
             }
 
@@ -47,7 +62,11 @@ module.exports = {
     checkAvatar: (req, res, next) => {
         try {
             if (req.photos.length > 1) {
-                // throw new Error('You can upload just one photo'); // TODO
+                throw new ErrorHandler(
+                    statusCodes.BAD_REQUEST,
+                    errorMessages.LIMITED_SIZE.customCode,
+                    errorMessages.LIMITED_SIZE.message
+                );
             }
 
             [req.avatar] = req.photos;

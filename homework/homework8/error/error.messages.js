@@ -10,7 +10,7 @@ module.exports = {
     },
     ID_NOT_VALID: {
         customCode: 4002,
-        message: 'Id is invalid'
+        message: 'Id is not invalid'
     },
     WRONG_EMAIL_OF_PASSWORD: {
         customCode: 4003,
@@ -23,6 +23,18 @@ module.exports = {
     WRONG_ACTION: {
         customCode: 4005,
         message: 'Wrong email action'
+    },
+    TOO_BIG_FILE: {
+        customCode: 4006,
+        message: 'File is too big'
+    },
+    WRONG_FILE: {
+        customCode: 4007,
+        message: 'File is not invalid'
+    },
+    LIMITED_SIZE: {
+        customCode: 4008,
+        message: 'You can upload just one photo'
     },
     // UNAUTHORIZED
     NOT_VERIFIED_TOKEN: {
