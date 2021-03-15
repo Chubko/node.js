@@ -45,6 +45,8 @@ module.exports = {
                 );
             }
 
+            req.car = car;
+
             next();
         } catch (e) {
             next(e);

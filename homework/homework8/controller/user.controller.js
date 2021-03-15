@@ -1,7 +1,7 @@
-const { dirNames: { PHOTOS, STATIC, USER }, emailActions, statusCodes } = require('../constant');
+const { dirNames: { PHOTOS, USER }, emailActions, statusCodes } = require('../constant');
 const { attachmentDirBuilder, passwordHasher } = require('../helper');
 const { userMessage } = require('../message');
-const { emailService, userService } = require('../service');
+const { emailService, fileService, userService } = require('../service');
 
 module.exports = {
     createUser: async (req, res, next) => {
@@ -13,7 +13,7 @@ module.exports = {
             const user = await userService.createUser({ ...req.body, password: hashPassword });
 
             if (avatar) {
-                const { uploadPath } = await attachmentDirBuilder(avatar, avatar.name, PHOTOS, user._id, STATIC, USER);
+                const { uploadPath } = await attachmentDirBuilder(avatar, PHOTOS, user._id, USER);
 
                 await userService.updateUserById(user._id, { avatar: uploadPath });
             }
@@ -36,11 +36,9 @@ module.exports = {
         }
     },
 
-    findUserById: async (req, res, next) => {
+    findUserById: (req, res, next) => {
         try {
-            const { userId } = req.params;
-
-            const user = await userService.findUserById(userId);
+            const { user } = req;
 
             res.json(user);
         } catch (e) {
@@ -51,16 +49,19 @@ module.exports = {
     updateUserById: async (req, res, next) => {
         try {
             const { userId } = req.params;
-            const { avatar, body: { email, password, prefLang = 'en' } } = req;
+            const { avatar, body: { email, password, prefLang = 'en' }, user: { _id } } = req;
 
-            const hashPassword = await passwordHasher.hash(password);
-
-            const user = await userService.updateUserById(userId, { ...req.body, password: hashPassword });
+            if (password) {
+                const hashPassword = await passwordHasher.hash(password);
+                await userService.updateUserById(userId, { ...req.body, password: hashPassword });
+            }
 
             if (avatar) {
-                const { uploadPath } = attachmentDirBuilder(avatar, avatar.name, PHOTOS, user._id, STATIC, USER);
+                await fileService.deleteFile(USER, _id);
 
-                await userService.updateUserById(user._id, { avatar: uploadPath });
+                const { uploadPath } = await attachmentDirBuilder(avatar, PHOTOS, _id, USER);
+
+                await userService.updateUserById(_id, { avatar: uploadPath });
             }
 
             await emailService.sendEmail(email, emailActions.USER_CHANGED, { userEmail: email });
@@ -73,10 +74,11 @@ module.exports = {
 
     deleteUserById: async (req, res, next) => {
         try {
-            const { userId } = req.params;
-            const { email } = req;
+            const { user: { _id, email } } = req;
 
-            await userService.deleteUserById(userId);
+            await userService.deleteUserById(_id);
+
+            await fileService.deleteFile(USER, _id);
 
             await emailService.sendEmail(email, emailActions.USER_DELETED, { userEmail: email });
 

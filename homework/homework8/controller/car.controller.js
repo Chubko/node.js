@@ -1,12 +1,7 @@
-const {
-    dirNames: {
-        CAR, DOCS, PHOTOS, STATIC
-    },
-    statusCodes
-} = require('../constant');
+const { dirNames: { CAR, DOCS, PHOTOS }, statusCodes } = require('../constant');
 const { attachmentDirBuilder } = require('../helper');
 const { carMessage } = require('../message');
-const { carService } = require('../service');
+const { carService, fileService } = require('../service');
 
 module.exports = {
     createCar: async (req, res, next) => {
@@ -15,7 +10,7 @@ module.exports = {
             const car = await carService.createCar(req.body);
 
             if (docs) {
-                const promises = docs.map(doc => attachmentDirBuilder(doc, doc.name, DOCS, car._id, STATIC, CAR));
+                const promises = docs.map(doc => attachmentDirBuilder(doc, DOCS, car._id, CAR));
 
                 await Promise.allSettled(promises)
                     // eslint-disable-next-line no-return-await
@@ -24,7 +19,7 @@ module.exports = {
             }
 
             if (photos) {
-                const promises = photos.map(photo => attachmentDirBuilder(photo, photo.name, PHOTOS, car._id, STATIC, CAR));
+                const promises = photos.map(photo => attachmentDirBuilder(photo, PHOTOS, car._id, CAR));
 
                 await Promise.allSettled(promises)
                     // eslint-disable-next-line no-return-await
@@ -48,11 +43,9 @@ module.exports = {
         }
     },
 
-    getCarById: async (req, res, next) => {
+    getCarById: (req, res, next) => {
         try {
-            const { carId } = req.params;
-
-            const car = await carService.findCarById(carId);
+            const { car } = req;
 
             res.json(car);
         } catch (e) {
@@ -62,9 +55,31 @@ module.exports = {
 
     updateCarById: async (req, res, next) => {
         try {
-            const { carId } = req.params;
+            const {
+                body, docs, params: { carId }, photos
+            } = req;
 
-            await carService.updateCarById(carId, req.body);
+            if (body) {
+                await carService.updateCarById(carId, body);
+            }
+
+            if (docs) {
+                const promises = docs.map(doc => attachmentDirBuilder(doc, DOCS, carId, CAR));
+
+                await Promise.allSettled(promises)
+                    // eslint-disable-next-line no-return-await
+                    .then((results) => results.forEach(async doc => await carService.updateCarById(carId,
+                        { $push: { docs: doc.value.uploadPath } })));
+            }
+
+            if (photos) {
+                const promises = photos.map(photo => attachmentDirBuilder(photo, PHOTOS, carId, CAR));
+
+                await Promise.allSettled(promises)
+                    // eslint-disable-next-line no-return-await
+                    .then((results) => results.forEach(async photo => await carService.updateCarById(carId,
+                        { $push: { photos: photo.value.uploadPath } })));
+            }
 
             res.json(carMessage.UPDATED);
         } catch (e) {
@@ -77,6 +92,8 @@ module.exports = {
             const { carId } = req.params;
 
             await carService.deleteCarById(carId);
+
+            await fileService.deleteFile(CAR, carId);
 
             res.json(carMessage.DELETED);
         } catch (e) {

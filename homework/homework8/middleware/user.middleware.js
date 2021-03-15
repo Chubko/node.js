@@ -27,7 +27,7 @@ module.exports = {
                 );
             }
 
-            req.email = user.email;
+            req.user = user;
 
             next();
         } catch (e) {
