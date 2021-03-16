@@ -4,7 +4,7 @@
 // const connection = mysql2.createConnection({
 //     host: 'localhost',
 //     user: 'root',
-//     password: 'Moskaliuk777',
+//     password: 'root',
 //     database: 'june-2020'
 // });
 //
@@ -19,7 +19,7 @@ module.exports = (() => {
     let instance;
 
     const initConnection = () => {
-        const client = new Sequelize('june-2020', 'root', 'Moskaliuk777', { dialect: 'mysql' }); // connection
+        const client = new Sequelize('june-2020', 'root', 'root', { dialect: 'mysql' }); // connection
 
         const models = {}; // тут будуть всі моделі
         const modelsPath = path.join(process.cwd(), 'dataBase', 'MySQL', 'models'); // шлях до моделей
