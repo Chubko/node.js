@@ -5,10 +5,10 @@ const db = require('../database').getInstance();
 const { queryBuilder } = require('../helper');
 
 module.exports = {
-    createUser: (userObject) => {
+    createUser: (userObject, transaction) => {
         const User = db.getModel(USER);
 
-        return User.create(userObject);
+        return User.create(userObject, { transaction });
     },
 
     findAllUsers: async (query) => {
@@ -65,6 +65,9 @@ module.exports = {
                     // });
 
                     break;
+                case 'email':
+                    filterObject.email = { [Op.like]: `%${filters.email}%` };
+                    break;
                 case 'name':
                     filterObject.name = { [Op.like]: `%${filters.name}%` };
                     break;
@@ -76,7 +79,7 @@ module.exports = {
         const users = await User.findAll({ where: filterObject, attributes: { exclude: 'password' } });
 
         return {
-            data: users,
+            data: users
         };
     },
 
@@ -84,8 +87,7 @@ module.exports = {
         const User = db.getModel(USER);
 
         return User.findOne({
-            where: userObject,
-            attributes: { exclude: 'password' }
+            where: userObject
         });
     },
 
@@ -98,18 +100,20 @@ module.exports = {
         });
     },
 
-    updateUserById: (userId, userObject) => {
+    updateUserById: (userId, userObject, transaction) => {
         const User = db.getModel(USER);
 
         return User.update(userObject, {
             where: { id: userId },
-            attributes: { exclude: 'password' }
+            attributes: { exclude: 'password' },
+            returning: true,
+            transaction
         });
     },
 
-    deleteUserById: (userId) => {
+    deleteUserById: (userId, transaction) => {
         const User = db.getModel(USER);
 
-        return User.destroy({ where: { id: userId } });
+        return User.destroy({ where: { id: userId }, transaction });
     }
 };

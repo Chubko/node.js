@@ -51,7 +51,7 @@ module.exports = {
                 }
             });
 
-            const tokens = await authService.findToken({ access_token });
+            const tokens = await authService.findToken(access_token);
 
             if (!tokens) {
                 throw new ErrorHandler(
@@ -60,8 +60,6 @@ module.exports = {
                     errorMessages.RECORD_NOT_FOUND.message
                 );
             }
-
-            req.user = tokens._user_id;
 
             next();
         } catch (e) {

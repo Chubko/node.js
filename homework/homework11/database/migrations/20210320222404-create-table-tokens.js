@@ -6,10 +6,8 @@ module.exports = {
             {
                 id: {
                     type: Sequelize.DataTypes.INTEGER,
-                    allowNull: false,
                     primaryKey: true,
                     autoIncrement: true,
-                    unique: true
                 },
                 access_token: {
                     type: Sequelize.DataTypes.STRING,

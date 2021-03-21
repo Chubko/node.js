@@ -9,8 +9,6 @@ module.exports = {
         try {
             const userId = +req.params.userId;
 
-            const user = await findUserById(userId);
-
             if (userId < 0 || !Number.isInteger(userId) || Number.isNaN(userId)) {
                 throw new ErrorHandler(
                     statusCodes.BAD_REQUEST,
@@ -18,6 +16,8 @@ module.exports = {
                     errorMessages.ID_NOT_VALID.message
                 );
             }
+
+            const user = await findUserById(userId);
 
             if (!user) {
                 throw new ErrorHandler(

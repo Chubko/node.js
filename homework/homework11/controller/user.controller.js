@@ -13,12 +13,12 @@ module.exports = {
 
             const hashPassword = await passwordHasher.hash(password);
 
-            const user = await userService.createUser({ ...req.body, password: hashPassword });
+            const user = await userService.createUser({ ...req.body, password: hashPassword }, transaction);
 
             if (avatar) {
                 const { uploadPath } = await attachmentDirBuilder(avatar, PHOTOS, user.id, USER);
 
-                await userService.updateUserById(user.id, { avatar: uploadPath });
+                await userService.updateUserById(user.id, { avatar: uploadPath }, transaction);
             }
 
             await emailService.sendEmail(email, emailActions.USER_CREATED, { userEmail: email });
@@ -57,21 +57,24 @@ module.exports = {
         const transaction = await transactionInstance();
 
         try {
-            const { userId } = req.params;
-            const { avatar, body: { email, password, prefLang = 'en' }, user: { _id } } = req;
+            const {
+                avatar, body, body: { email, password, prefLang = 'en' }, params: { userId }
+            } = req;
 
             if (password) {
                 const hashPassword = await passwordHasher.hash(password);
-                await userService.updateUserById(userId, { ...req.body, password: hashPassword });
+                await userService.updateUserById(userId, { ...req.body, password: hashPassword }, transaction);
             }
 
             if (avatar) {
-                await fileService.deleteFile(USER, _id);
+                await fileService.deleteFile(USER, userId);
 
-                const { uploadPath } = await attachmentDirBuilder(avatar, PHOTOS, _id, USER);
+                const { uploadPath } = await attachmentDirBuilder(avatar, PHOTOS, userId, USER);
 
-                await userService.updateUserById(_id, { avatar: uploadPath });
+                await userService.updateUserById(userId, { avatar: uploadPath }, transaction);
             }
+
+            await userService.updateUserById(userId, body, transaction);
 
             await emailService.sendEmail(email, emailActions.USER_CHANGED, { userEmail: email });
 
@@ -89,11 +92,11 @@ module.exports = {
         const transaction = await transactionInstance();
 
         try {
-            const { user: { _id, email } } = req;
+            const { user: { id, email } } = req;
 
-            await userService.deleteUserById(_id);
+            await userService.deleteUserById(id, transaction);
 
-            await fileService.deleteFile(USER, _id);
+            await fileService.deleteFile(USER, id);
 
             await emailService.sendEmail(email, emailActions.USER_DELETED, { userEmail: email });
 

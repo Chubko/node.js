@@ -25,17 +25,17 @@ module.exports = {
 
     isIdValid: async (req, res, next) => {
         try {
-            const { carId } = req.params;
+            const carId = +req.params.carId;
 
-            const car = await findCarById(carId);
-
-            if (carId.length !== 24) {
+            if (carId < 0 || !Number.isInteger(carId) || Number.isNaN(carId)) {
                 throw new ErrorHandler(
                     statusCodes.BAD_REQUEST,
                     errorMessages.ID_NOT_VALID.customCode,
                     errorMessages.ID_NOT_VALID.message
                 );
             }
+
+            const car = await findCarById(carId);
 
             if (!car) {
                 throw new ErrorHandler(

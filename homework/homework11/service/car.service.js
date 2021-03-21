@@ -5,10 +5,10 @@ const db = require('../database').getInstance();
 const { queryBuilder } = require('../helper');
 
 module.exports = {
-    createCar: (carObject) => {
+    createCar: (carObject, transaction) => {
         const Car = db.getModel(CAR);
 
-        Car.create(carObject);
+        Car.create(carObject, { transaction });
     },
 
     findAllCars: async (query) => {
@@ -58,25 +58,25 @@ module.exports = {
         const cars = await Car.findAll({ where: filterObject });
 
         return {
-            data: cars,
+            data: cars
         };
     },
 
     findCarById: (carId) => {
         const Car = db.getModel(CAR);
 
-        return Car.findOne({ where: carId });
+        return Car.findOne({ where: { id: carId } });
     },
 
-    updateCarById: (carId, carObject) => {
+    updateCarById: (carId, carObject, transaction) => {
         const Car = db.getModel(CAR);
 
-        return Car.update(carObject, { where: { id: carId } });
+        return Car.update(carObject, { where: { id: carId }, transaction });
     },
 
-    deleteCarById: (carId) => {
+    deleteCarById: (carId, transaction) => {
         const Car = db.getModel(CAR);
 
-        return Car.destroy({ where: { id: carId } });
+        return Car.destroy({ where: { id: carId }, transaction });
     }
 };
