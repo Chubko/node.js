@@ -17,32 +17,23 @@ module.exports = (client) => {
             },
             price: {
                 type: DataTypes.INTEGER,
-                allowNull: false,
+                allowNull: false
             },
             year: {
                 type: DataTypes.INTEGER,
-                allowNull: false,
+                allowNull: false
             },
             photos: {
-                type: DataTypes.STRING,
+                type: DataTypes.STRING
             },
             docs: {
-                type: DataTypes.STRING,
+                type: DataTypes.STRING
             },
             user_id: {
                 type: DataTypes.INTEGER,
-                allowNull: false
-                // foreignKey: true
+                allowNull: false,
+                foreignKey: true
             }
-            // user_id: {
-            //     type: DataTypes.INTEGER,
-            //     allowNull: false,
-            //     references: {
-            //         model: USER,
-            //         key: 'id',
-            //         foreignKey: true
-            //     }
-            // }
         },
         {
             tableName: CARS,
@@ -52,7 +43,7 @@ module.exports = (client) => {
 
     Car.associate = () => {
         Car.belongsTo(USER, {
-            foreignKey: 'user_id',
+            foreignKey: 'id',
             onDelete: 'CASCADE'
         });
     };

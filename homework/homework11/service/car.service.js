@@ -8,7 +8,7 @@ module.exports = {
     createCar: (carObject, transaction) => {
         const Car = db.getModel(CAR);
 
-        Car.create(carObject, { transaction });
+        return Car.create(carObject, { transaction });
     },
 
     findAllCars: async (query) => {
@@ -32,7 +32,7 @@ module.exports = {
                         return;
                     }
 
-                    filterObject.age = { [Op.gte]: priceGte };
+                    filterObject.price = { [Op.gte]: priceGte };
                     break;
                 case 'priceLte':
                     if (priceGte) {
@@ -45,7 +45,7 @@ module.exports = {
                         return;
                     }
 
-                    filterObject.age = { [Op.gte]: priceLte };
+                    filterObject.price = { [Op.gte]: priceLte };
                     break;
                 case 'producer':
                     filterObject.producer = { [Op.like]: `%${filters.producer}%` };
@@ -71,7 +71,11 @@ module.exports = {
     updateCarById: (carId, carObject, transaction) => {
         const Car = db.getModel(CAR);
 
-        return Car.update(carObject, { where: { id: carId }, transaction });
+        return Car.update(carObject, {
+            where: { id: carId },
+            returning: true,
+            transaction
+        });
     },
 
     deleteCarById: (carId, transaction) => {

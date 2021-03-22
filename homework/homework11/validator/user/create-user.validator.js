@@ -14,6 +14,5 @@ module.exports = Joi.object({
         .max(110),
     gender: Joi.string().valid('female', 'male'),
     email: Joi.string().regex(regexpEnum.EMAIL_REGEXP).required(),
-    password: Joi.string().regex(regexpEnum.PASSWORD_REGEXP).required(),
-    car: Joi.array().items()
+    password: Joi.string().regex(regexpEnum.PASSWORD_REGEXP).required()
 });

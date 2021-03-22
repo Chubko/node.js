@@ -22,17 +22,8 @@ module.exports = (client) => {
             user_id: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                // foreignKey: true
+                foreignKey: true
             }
-            // user_id: {
-            //     type: DataTypes.INTEGER,
-            //     allowNull: false,
-            //     references: {
-            //         model: USER,
-            //         key: 'id',
-            //         foreignKey: true
-            //     }
-            // }
         },
         {
             tableName: TOKENS,

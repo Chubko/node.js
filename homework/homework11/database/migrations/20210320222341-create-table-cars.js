@@ -7,7 +7,7 @@ module.exports = {
                 id: {
                     type: Sequelize.DataTypes.INTEGER,
                     primaryKey: true,
-                    autoIncrement: true,
+                    autoIncrement: true
                 },
                 producer: {
                     type: Sequelize.DataTypes.STRING,
@@ -15,17 +15,17 @@ module.exports = {
                 },
                 price: {
                     type: Sequelize.DataTypes.INTEGER,
-                    allowNull: false,
+                    allowNull: false
                 },
                 year: {
                     type: Sequelize.DataTypes.INTEGER,
-                    allowNull: false,
+                    allowNull: false
                 },
                 photos: {
-                    type: Sequelize.DataTypes.STRING,
+                    type: Sequelize.DataTypes.STRING
                 },
                 docs: {
-                    type: Sequelize.DataTypes.STRING,
+                    type: Sequelize.DataTypes.STRING
                 },
                 user_id: {
                     type: Sequelize.DataTypes.INTEGER,

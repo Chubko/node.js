@@ -7,7 +7,7 @@ module.exports = {
                 id: {
                     type: Sequelize.DataTypes.INTEGER,
                     primaryKey: true,
-                    autoIncrement: true,
+                    autoIncrement: true
                 },
                 name: {
                     type: Sequelize.DataTypes.STRING,
@@ -15,7 +15,7 @@ module.exports = {
                 },
                 age: {
                     type: Sequelize.DataTypes.INTEGER,
-                    allowNull: false,
+                    allowNull: false
                 },
                 gender: {
                     type: Sequelize.DataTypes.STRING,
@@ -31,6 +31,12 @@ module.exports = {
                 },
                 avatar: {
                     type: Sequelize.DataTypes.STRING
+                },
+                car_id: {
+                    type: Sequelize.DataTypes.INTEGER
+                },
+                o_Auth_id: {
+                    type: Sequelize.DataTypes.INTEGER
                 }
             });
     },

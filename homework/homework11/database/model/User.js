@@ -17,10 +17,10 @@ module.exports = (client) => {
             },
             age: {
                 type: DataTypes.INTEGER,
-                allowNull: false,
+                allowNull: false
             },
             gender: {
-                type: DataTypes.STRING,
+                type: DataTypes.STRING
             },
             email: {
                 type: DataTypes.STRING,
@@ -34,20 +34,12 @@ module.exports = (client) => {
             avatar: {
                 type: DataTypes.STRING
             },
-            // car_id: {
-            //     type: DataTypes.INTEGER,
-            //     references: {
-            //         model: CAR,
-            //         key: 'user_id'
-            //     }
-            // },
-            // o_Auth_id: {
-            //     type: DataTypes.INTEGER,
-            //     references: {
-            //         model: O_AUTH,
-            //         key: 'user_id'
-            //     }
-            // },
+            car_id: {
+                type: DataTypes.INTEGER
+            },
+            o_Auth_id: {
+                type: DataTypes.INTEGER
+            },
         },
         {
             tableName: USERS,
