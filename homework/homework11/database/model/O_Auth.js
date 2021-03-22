@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-const { databaseModels: { O_AUTH, USER }, databaseTables: { TOKENS } } = require('../../constant');
+const { databaseModels: { O_AUTH }, databaseTables: { TOKENS } } = require('../../constant');
 
 module.exports = (client) => {
     const O_Auth = client.define(
@@ -30,13 +30,6 @@ module.exports = (client) => {
             timestamps: false
         }
     );
-
-    O_Auth.associate = () => {
-        O_Auth.belongsTo(USER, {
-            foreignKey: 'user_id',
-            onDelete: 'CASCADE'
-        });
-    };
 
     return O_Auth;
 };

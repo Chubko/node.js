@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-const { databaseModels: { CAR, USER }, databaseTables: { CARS } } = require('../../constant');
+const { databaseModels: { CAR }, databaseTables: { CARS } } = require('../../constant');
 
 module.exports = (client) => {
     const Car = client.define(
@@ -40,13 +40,6 @@ module.exports = (client) => {
             timestamps: false
         }
     );
-
-    Car.associate = () => {
-        Car.belongsTo(USER, {
-            foreignKey: 'id',
-            onDelete: 'CASCADE'
-        });
-    };
 
     return Car;
 };

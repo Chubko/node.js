@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-const { databaseModels: { CAR, O_AUTH, USER }, databaseTables: { USERS } } = require('../../constant');
+const { databaseModels: { USER }, databaseTables: { USERS } } = require('../../constant');
 
 module.exports = (client) => {
     const User = client.define(
@@ -47,17 +47,20 @@ module.exports = (client) => {
         }
     );
 
-    User.associate = () => {
-        User.hasMany(CAR, {
-            foreignKey: 'user_id'
-        });
-    };
+    const Car = require('./Car')(client);
+    const O_Auth = require('./O_Auth')(client);
 
-    User.associate = () => {
-        User.hasMany(O_AUTH, {
-            foreignKey: 'user_id'
-        });
-    };
+    User.hasMany(Car, {
+        foreignKey: 'user_id',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+    });
+
+    User.hasMany(O_Auth, {
+        foreignKey: 'user_id',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+    });
 
     return User;
 };

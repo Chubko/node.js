@@ -1,6 +1,6 @@
 const { Op } = require('sequelize');
 
-const { USER } = require('../constant/database.Models.enum');
+const { CAR, USER } = require('../constant/database.Models.enum');
 const db = require('../database').getInstance();
 const { queryBuilder } = require('../helper');
 
@@ -12,6 +12,7 @@ module.exports = {
     },
 
     findAllUsers: async (query) => {
+        const Car = db.getModel(CAR);
         const User = db.getModel(USER);
 
         const { filters, keys } = queryBuilder(query);
@@ -76,7 +77,11 @@ module.exports = {
             }
         });
 
-        const users = await User.findAll({ where: filterObject, attributes: { exclude: 'password' } });
+        const users = await User.findAll({
+            where: filterObject,
+            attributes: { exclude: 'password' },
+            include: Car
+        });
 
         return {
             data: users
@@ -92,20 +97,24 @@ module.exports = {
     },
 
     findUserById: (userId) => {
+        const Car = db.getModel(CAR);
         const User = db.getModel(USER);
 
         return User.findOne({
             where: { id: userId },
-            attributes: { exclude: 'password' }
+            attributes: { exclude: 'password' },
+            include: Car
         });
     },
 
     updateUserById: (userId, userObject, transaction) => {
+        const Car = db.getModel(CAR);
         const User = db.getModel(USER);
 
         return User.update(userObject, {
             where: { id: userId },
             attributes: { exclude: 'password' },
+            include: Car,
             returning: true,
             transaction
         });
